@@ -1,90 +1,76 @@
 // src/components/LoginForm.tsx
 import React, { useState } from 'react';
+// Se você for usar o AuthContext para redirecionar ou guardar o token:
+// import { useAuth } from '../contexts/AuthContext';
+// import { useNavigate } from 'react-router-dom';
 
 const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>(''); //
+  const [password, setPassword] = useState<string>(''); //
+  const [error, setError] = useState<string>(''); //
+  const [isLoading, setIsLoading] = useState<boolean>(false); //
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-    setIsLoading(true);
+  // const auth = useAuth(); // Exemplo para usar o contexto de autenticação
+  // const navigate = useNavigate(); // Exemplo para navegação
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => { //
+    event.preventDefault(); //
+    setError(''); //
+    setIsLoading(true); //
 
     // Validação básica
-    if (!email || !password) {
-      setError('Por favor, preencha todos os campos.');
-      setIsLoading(false);
-      return;
+    if (!email || !password) { //
+      setError('Por favor, preencha todos os campos.'); //
+      setIsLoading(false); //
+      return; //
     }
 
     try {
-      // --- Lógica de Autenticação ---
-      // Aqui você faria a chamada para sua API de backend
-      // Exemplo:
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password }),
-      // });
-
-      // const data = await response.json();
-
-      // if (!response.ok) {
-      //   throw new Error(data.message || 'Falha no login');
-      // }
-
       // Simulação de chamada de API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Login bem-sucedido com:', { email, password });
+      await new Promise(resolve => setTimeout(resolve, 1000)); //
+      console.log('Login bem-sucedido com:', { email, password }); //
       // Se o login for bem-sucedido:
-      // 1. Armazene o token de autenticação (ex: no localStorage ou Context API)
-      // 2. Redirecione o usuário para a página principal
-      // Ex: window.location.href = '/dashboard'; (ou usando React Router)
+      // 1. Chame auth.login(tokenDaApi) se estiver usando AuthContext
+      // 2. Redirecione o usuário: navigate('/dashboard'); se estiver usando React Router
 
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+      if (err instanceof Error) { //
+        setError(err.message); //
       } else {
-        setError('Ocorreu um erro desconhecido.');
+        setError('Ocorreu um erro desconhecido.'); //
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); //
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '300px' }}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <div>
-        <label htmlFor="email">Email:</label>
+    <form onSubmit={handleSubmit} className="login-form"> {/* Aplicando classe CSS */}
+      {error && <p className="error-message">{error}</p>} {/* Aplicando classe CSS */}
+      <div className="form-group"> {/* Aplicando classe CSS */}
+        <label htmlFor="email">Email:</label> {/* */}
         <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ width: '100%', padding: '0.5rem' }}
-          aria-describedby={error && email === '' ? 'email-error' : undefined}
+          type="email" //
+          id="email" //
+          value={email} //
+          onChange={(e) => setEmail(e.target.value)} //
+          required //
         />
-        {error && email === '' && <span id="email-error" style={{ color: 'red', fontSize: '0.8rem' }}>Email é obrigatório</span>}
+        {/* Se você quiser erros por campo, precisaria de uma lógica mais elaborada ou uma biblioteca como React Hook Form */}
+        {/* Ex: {fieldErrors.email && <span className="input-error-message">{fieldErrors.email}</span>} */}
       </div>
-      <div>
-        <label htmlFor="password">Senha:</label>
+      <div className="form-group"> {/* Aplicando classe CSS */}
+        <label htmlFor="password">Senha:</label> {/* */}
         <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ width: '100%', padding: '0.5rem' }}
-          aria-describedby={error && password === '' ? 'password-error' : undefined}
+          type="password" //
+          id="password" //
+          value={password} //
+          onChange={(e) => setPassword(e.target.value)} //
+          required //
         />
-        {error && password === '' && <span id="password-error" style={{ color: 'red', fontSize: '0.8rem' }}>Senha é obrigatória</span>}
       </div>
-      <button type="submit" disabled={isLoading} style={{ padding: '0.75rem' }}>
-        {isLoading ? 'Entrando...' : 'Entrar'}
+      <button type="submit" disabled={isLoading}> {/* */}
+        {isLoading ? 'Entrando...' : 'Entrar'} {/* */}
       </button>
     </form>
   );

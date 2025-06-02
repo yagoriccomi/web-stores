@@ -1,18 +1,18 @@
 // src/pages/LoginPage.tsx
 import React from 'react';
-import LoginForm from '../components/LoginForm.tsx'; // Criaremos este componente a seguir
+import LoginForm from '../components/LoginForm.tsx'; //
 
 const LoginPage: React.FC = () => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <div>
-        <h2>Login</h2>
-        <LoginForm />
+    <div className="login-page-container"> {/* Aplicando classe CSS */}
+      <div className="login-box login-box-narrow"> {/* Adiciona classe para largura do login */}
+        <h2>Login</h2> {/* */}
+        <LoginForm /> {/* */}
         <p>
-          Não tem uma conta? <a href="/signup">Cadastre-se</a>
+          Não tem uma conta? <a href="/signup">Cadastre-se</a> {/* */}
         </p>
         <p>
-          <a href="/forgot-password">Esqueceu sua senha?</a>
+          <a href="/forgot-password">Esqueceu sua senha?</a> {/* */}
         </p>
       </div>
     </div>

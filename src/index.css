@@ -1,0 +1,230 @@
+/* src/index.css */
+
+/* Reset básico e fontes padrão */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #f8f9fa; /* Cinza bem claro para o fundo (da referência) */
+  color: #343a40;         /* Cor de texto principal (cinza escuro) */
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container principal da página de login/cadastro */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Caixa de login/cadastro */
+.login-box {
+  background-color: #ffffff; /* Fundo branco para a caixa */
+  padding: 30px 35px;      /* Padding */
+  border-radius: 8px;      /* Bordas arredondadas */
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08); /* Sombra sutil */
+  width: 100%;
+  text-align: center;
+}
+
+.login-box.signup-box {
+  max-width: 700px; /* Mais largo para o formulário de cadastro */
+}
+
+.login-box.login-box-narrow {
+  max-width: 420px; /* Mais estreito para o formulário de login */
+}
+
+.login-box h2 {
+  margin-bottom: 30px;
+  color: #212529;         /* Preto suave para o título */
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Formulário */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre os elementos do formulário */
+}
+
+.form-group {
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #495057; /* Cinza para labels */
+  font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"] { /* Adicionado type="tel" e "text" para abranger mais inputs */
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da; /* Borda cinza claro */
+  border-radius: 6px;
+  font-size: 16px;
+  color: #495057; /* Cor do texto do input */
+  background-color: #fff; /* Fundo do input */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="tel"]:focus {
+  outline: none;
+  border-color: #fd7e14; /* Laranja para foco (cor de destaque) */
+  box-shadow: 0 0 0 0.2rem rgba(253, 126, 20, 0.25); /* Sombra de foco laranja sutil */
+}
+
+/* Linha de formulário para agrupar campos lado a lado em desktop */
+.form-row {
+  display: flex;
+  flex-direction: column; /* Padrão para mobile: empilhado */
+  gap: 20px; /* Espaço entre grupos na linha (para mobile, será entre linhas) */
+}
+
+/* Botão de Submit */
+.login-form button[type="submit"] {
+  background-color: #fd7e14; /* Laranja (cor de destaque) */
+  color: white;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+  text-transform: uppercase; /* Estilo da referência */
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #e66a00; /* Laranja mais escuro no hover */
+}
+
+.login-form button[type="submit"]:disabled {
+  background-color: #ffbf80; /* Laranja claro para estado desabilitado */
+  cursor: not-allowed;
+}
+
+/* Mensagens de Erro */
+.error-message { /* Erro geral do formulário */
+  color: #721c24; /* Vermelho escuro para texto */
+  background-color: #f8d7da; /* Fundo vermelho claro */
+  border: 1px solid #f5c6cb; /* Borda vermelha */
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.input-error-message { /* Erro específico do input */
+  color: #c53030;
+  font-size: 0.875em; /* 14px se base for 16px */
+  margin-top: 6px;
+  display: block;
+}
+
+/* Links abaixo do formulário */
+.login-box p {
+  margin-top: 25px;
+  font-size: 14px;
+  color: #6c757d; /* Cinza para o texto */
+}
+
+.login-box p a {
+  color: #fd7e14; /* Laranja para links */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-box p a:hover {
+  text-decoration: underline;
+}
+
+/* Feedback de carregamento de CEP */
+.cep-loading-message {
+  font-size: 0.9em;
+  color: #495057; /* Cinza */
+  margin-top: 4px;
+}
+
+
+/* ----- Responsividade ----- */
+
+/* Telas Médias e Maiores (Tablets e Desktops pequenos) */
+@media (min-width: 768px) {
+  .login-box {
+      padding: 40px 50px;
+  }
+
+  .form-row {
+      flex-direction: row; /* Campos lado a lado */
+      gap: 24px; /* Espaço entre os campos na mesma linha */
+  }
+
+  .form-row .form-group {
+      flex: 1; /* Faz com que os campos na mesma linha dividam o espaço */
+  }
+
+  .login-box.signup-box {
+      /* max-width já é 700px, o que é bom para 2 colunas */
+  }
+}
+
+/* Telas Pequenas (Mobiles) */
+@media (max-width: 767px) {
+  body {
+      padding: 10px; /* Menos padding no body em telas pequenas */
+  }
+  .login-box {
+      padding: 25px 20px;
+      margin: 15px; /* Garante que não cole nas bordas */
+  }
+
+  .login-box h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+  }
+
+  .login-form {
+      gap: 15px;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="password"],
+  .form-group input[type="tel"] {
+      padding: 10px 12px;
+      font-size: 15px;
+  }
+
+  .login-form button[type="submit"] {
+      padding: 10px 12px;
+      font-size: 15px;
+  }
+
+  .login-box p {
+      font-size: 13px;
+      margin-top: 20px;
+  }
+}
