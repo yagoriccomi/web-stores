@@ -1,30 +1,39 @@
 // src/App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import { AuthProvider, useAuth } from './contexts/AuthContext'; // Import useAuth
-import './index.css'; // Certifique-se que o CSS global está aqui ou em main.tsx
+import ProfilePage from './pages/ProfilePage';
+import ProductsPage from './pages/ProductsPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext'; // <<<--- ADICIONE/VERIFIQUE ESTA LINHA
+import Header from './components/Header';
+import Footer from './components/Footer';
+import './index.css';
+import { SearchProvider } from './contexts/SearchContext';
+// import './pages/ProductsPage.css'; // O CSS específico da página já está importado em ProductsPage.tsx
 
-// Um componente para simular uma página de Dashboard (protegida)
+// ... (DashboardPage e ProtectedRoute como definidos anteriormente) ...
 const DashboardPage: React.FC = () => {
   const auth = useAuth();
+  const navigate = useNavigate();
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+    <div style={{ textAlign: 'center', marginTop: '50px', minHeight: 'calc(100vh - 200px)' }}>
       <h2>Dashboard</h2>
       <p>Bem-vindo! Você está logado.</p>
-      <button onClick={() => auth.logout()} style={{ padding: '10px 20px', background: '#fd7e14', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+      <button
+        onClick={() => auth.logout(() => navigate('/login'))}
+        style={{ padding: '10px 20px', background: '#fd7e14', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+      >
         Sair
       </button>
     </div>
   );
 };
 
-// Componente para Rotas Protegidas
 const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
-    // Redireciona para a página de login se não estiver autenticado
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -33,38 +42,40 @@ const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Rota principal e rota /login levam para LoginPage */}
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-
-          {/* Exemplo de rota protegida */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Rota raiz redireciona para /login ou /dashboard dependendo da autenticação */}
-          <Route
-            path="/"
-            element={
-              // Se precisar de lógica para redirecionar autenticado para dashboard:
-              // const { isAuthenticated } = useAuth(); // Isso precisaria estar num componente filho do AuthProvider
-              // return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />;
-              // Por simplicidade, vamos sempre para /login como raiz se não logado
-              <Navigate to="/login" replace />
-            }
-          />
-          
-          {/* Adicione uma rota curinga para páginas não encontradas, se desejar */}
-          {/* <Route path="*" element={<div>Página não encontrada</div>} /> */}
-        </Routes>
-      </Router>
+      <CartProvider>
+        <SearchProvider>
+          <Router>
+            <div className="app-layout">
+              <Header />
+              <main className="main-content">
+                <Routes>
+                  <Route path="/" element={<ProductsPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/signup" element={<SignUpPage />} />
+                  <Route
+                    path="/profile"
+                    element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
+                  />
+                  <Route
+                    path="/dashboard"
+                    element={<ProtectedRoute><DashboardPage /></ProtectedRoute>}
+                  />
+                  <Route
+                    path="/cart"
+                    element={
+                      <div style={{ padding: '20px', textAlign: 'center', minHeight: 'calc(100vh - 200px)' }}>Página do Carrinho (Em construção)</div>
+                    }
+                  />
+                  <Route path="/about" element={<div style={{ padding: '20px', textAlign: 'center' }}>Página Sobre Nós (Placeholder)</div>} />
+                  <Route path="/faq" element={<div style={{ padding: '20px', textAlign: 'center' }}>Página FAQ (Placeholder)</div>} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </SearchProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

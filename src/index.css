@@ -9,54 +9,55 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  background-color: #f8f9fa;
-  /* Cinza bem claro para o fundo (da referência) */
-  color: #343a40;
-  /* Cor de texto principal (cinza escuro) */
+  background-color: #f8f9fa; /* Cinza bem claro para o fundo */
+  color: #343a40;         /* Cor de texto principal (cinza escuro) */
   line-height: 1.6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  padding: 20px;
 }
 
-/* Container principal da página de login/cadastro */
+/* Layout geral da aplicação para Header, Main, Footer */
+.app-layout {
+display: flex;
+flex-direction: column;
+min-height: 100vh; 
+}
+
+.main-content {
+flex-grow: 1; 
+padding-top: 20px; 
+padding-bottom: 20px;
+}
+
+/* Container principal da página de login/cadastro (reutilizado em ProfilePage) */
 .login-page-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  padding: 20px; 
 }
 
 /* Caixa de login/cadastro */
 .login-box {
-  background-color: #ffffff;
-  /* Fundo branco para a caixa */
-  padding: 30px 35px;
-  /* Padding */
-  border-radius: 8px;
-  /* Bordas arredondadas */
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-  /* Sombra sutil */
+  background-color: #ffffff; 
+  padding: 30px 35px;      
+  border-radius: 8px;      
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08); 
   width: 100%;
   text-align: center;
 }
 
-.login-box.signup-box {
-  max-width: 700px;
-  /* Mais largo para o formulário de cadastro */
+.login-box.signup-box { /* Para SignUpForm */
+  max-width: 700px; 
 }
 
-.login-box.login-box-narrow {
-  max-width: 420px;
-  /* Mais estreito para o formulário de login */
+.login-box.login-box-narrow { /* Para LoginForm */
+  max-width: 420px; 
 }
 
 .login-box h2 {
   margin-bottom: 30px;
-  color: #212529;
-  /* Preto suave para o título */
+  color: #212529;         
   font-size: 28px;
   font-weight: 600;
 }
@@ -65,20 +66,19 @@ body {
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  /* Espaço entre os elementos do formulário */
+  gap: 20px; 
 }
 
 .form-group {
   text-align: left;
+  position: relative; 
 }
 
 .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #495057;
-  /* Cinza para labels */
+  color: #495057; 
   font-size: 14px;
 }
 
@@ -86,17 +86,13 @@ body {
 .form-group input[type="email"],
 .form-group input[type="password"],
 .form-group input[type="tel"] {
-  /* Adicionado type="tel" e "text" para abranger mais inputs */
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #ced4da;
-  /* Borda cinza claro */
+  border: 1px solid #ced4da; 
   border-radius: 6px;
   font-size: 16px;
-  color: #495057;
-  /* Cor do texto do input */
-  background-color: #fff;
-  /* Fundo do input */
+  color: #495057; 
+  background-color: #fff; 
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -105,25 +101,58 @@ body {
 .form-group input[type="password"]:focus,
 .form-group input[type="tel"]:focus {
   outline: none;
-  border-color: #fd7e14;
-  /* Laranja para foco (cor de destaque) */
-  box-shadow: 0 0 0 0.2rem rgba(253, 126, 20, 0.25);
-  /* Sombra de foco laranja sutil */
+  border-color: #fd7e14; 
+  box-shadow: 0 0 0 0.2rem rgba(253, 126, 20, 0.25); 
+}
+
+/* Input wrapper para ícone de senha */
+.input-wrapper-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper-with-icon input[type="text"],
+.input-wrapper-with-icon input[type="password"] {
+  flex-grow: 1;
+  padding-right: 48px !important; 
+}
+
+.password-toggle-button {
+  position: absolute;
+  right: 8px; 
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  color: #495057;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  line-height: 1;
+  outline: none;
+  z-index: 2;
+}
+
+.password-toggle-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.35);
+  border-radius: 50%;
 }
 
 /* Linha de formulário para agrupar campos lado a lado em desktop */
 .form-row {
   display: flex;
-  flex-direction: column;
-  /* Padrão para mobile: empilhado */
-  gap: 20px;
-  /* Espaço entre grupos na linha (para mobile, será entre linhas) */
+  flex-direction: column; 
+  gap: 20px; 
 }
 
 /* Botão de Submit */
 .login-form button[type="submit"] {
-  background-color: #fd7e14;
-  /* Laranja (cor de destaque) */
+  background-color: #fd7e14; 
   color: white;
   padding: 12px 15px;
   border: none;
@@ -133,30 +162,23 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-top: 10px;
-  text-transform: uppercase;
-  /* Estilo da referência */
+  text-transform: uppercase; 
 }
 
 .login-form button[type="submit"]:hover {
-  background-color: #e66a00;
-  /* Laranja mais escuro no hover */
+  background-color: #e66a00; 
 }
 
 .login-form button[type="submit"]:disabled {
-  background-color: #ffbf80;
-  /* Laranja claro para estado desabilitado */
+  background-color: #ffbf80; 
   cursor: not-allowed;
 }
 
 /* Mensagens de Erro */
-.error-message {
-  /* Erro geral do formulário */
-  color: #721c24;
-  /* Vermelho escuro para texto */
-  background-color: #f8d7da;
-  /* Fundo vermelho claro */
-  border: 1px solid #f5c6cb;
-  /* Borda vermelha */
+.error-message { 
+  color: #721c24; 
+  background-color: #f8d7da; 
+  border: 1px solid #f5c6cb; 
   border-radius: 4px;
   padding: 10px 15px;
   margin-bottom: 15px;
@@ -164,11 +186,9 @@ body {
   font-size: 14px;
 }
 
-.input-error-message {
-  /* Erro específico do input */
+.input-error-message { 
   color: #c53030;
-  font-size: 0.875em;
-  /* 14px se base for 16px */
+  font-size: 0.875em; 
   margin-top: 6px;
   display: block;
 }
@@ -177,13 +197,11 @@ body {
 .login-box p {
   margin-top: 25px;
   font-size: 14px;
-  color: #6c757d;
-  /* Cinza para o texto */
+  color: #6c757d; 
 }
 
 .login-box p a {
-  color: #fd7e14;
-  /* Laranja para links */
+  color: #fd7e14; 
   text-decoration: none;
   font-weight: 500;
 }
@@ -195,121 +213,469 @@ body {
 /* Feedback de carregamento de CEP */
 .cep-loading-message {
   font-size: 0.9em;
-  color: #495057;
-  /* Cinza */
+  color: #495057; 
   margin-top: 4px;
 }
 
-.input-wrapper-with-icon {
-  position: relative; /* ESSENCIAL: Cria o contexto para o posicionamento absoluto do botão */
-  display: flex;      /* Usado para alinhar o input, caso necessário, mas o principal é o position:relative */
-  align-items: center;/* Alinha itens verticalmente se o wrapper tiver altura definida por outros motivos */
+/* Estilos para ProfilePage */
+.section-form {
+margin-bottom: 30px;
+padding-bottom: 20px;
 }
 
-/* Estilo para o input dentro do wrapper */
-.input-wrapper-with-icon input[type="text"],
-.input-wrapper-with-icon input[type="password"] {
-  flex-grow: 1; /* Faz o input ocupar o espaço disponível à esquerda do ícone */
-  /* Garante espaço à direita DENTRO do input para o ícone não sobrepor o texto */
-  /* Este valor deve ser um pouco maior que a largura do ícone/botão + seu espaçamento da borda */
-  padding-right: 45px !important; /* Ajuste se necessário. !important pode ser útil para garantir a sobreposição */
-  /* Assegure que outras propriedades de padding (top, bottom, left) estejam consistentes com seus inputs normais */
-  /* Ex: padding: 12px 45px 12px 15px; (top/bottom 12px, left 15px, right 45px) */
+.section-form:last-of-type {
+margin-bottom: 0;
 }
 
-/* Botão do ícone de visualização de senha */
-.password-toggle-button {
-  position: absolute; /* Posiciona o botão em relação ao .input-wrapper-with-icon */
-  right: 10px;        /* Distância da borda DIREITA do wrapper. Ajuste para o espaçamento desejado. */
-  top: 50%;           /* Coloca o topo do botão no meio vertical do wrapper */
-  transform: translateY(-50%); /* Desloca o botão para cima pela metade de sua própria altura, centralizando-o perfeitamente */
-  
-  background: transparent; /* Sem fundo */
-  border: none;            /* Sem borda */
-  padding: 4px;            /* Pequeno padding para aumentar a área de clique ao redor do ícone */
-  margin: 0;               /* Remove margens padrão de botão */
-  cursor: pointer;
-  color: #495057;          /* Cor do ícone */
-  
-  display: flex;           /* Para centralizar o ícone dentro do botão, se o ícone tiver dimensões próprias */
-  align-items: center;
-  justify-content: center;
-  
-  font-size: 1.1rem;      /* Tamanho do ícone (ajuste conforme o ícone de react-icons) */
-  line-height: 1;          /* Evita altura de linha excessiva */
-  outline: none;
+.section-form h3 {
+font-size: 20px;
+color: #333;
+margin-bottom: 20px;
+text-align: left;
+border-bottom: 1px solid #f0f0f0;
+padding-bottom: 10px;
 }
 
-/* Estilo de foco para acessibilidade */
-.password-toggle-button:focus-visible {
-  box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.35); /* Laranja da referência */
-  border-radius: 50%; /* Foco circular ao redor do ícone */
+.form-divider {
+border: none;
+border-top: 1px solid #e9ecef; 
+margin: 30px 0; 
 }
 
+
+/* Estilos do Header ATUALIZADOS */
+.app-header {
+background-color: #ffffff; 
+padding: 10px 0; 
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+width: 100%;
+}
+
+.header-container {
+max-width: 1200px; 
+margin: 0 auto;
+padding: 0 20px; 
+display: flex;
+justify-content: space-between; 
+align-items: center; 
+}
+
+.logo {
+flex-shrink: 0; 
+}
+
+.logo a {
+text-decoration: none;
+font-size: 28px; 
+font-weight: 700; 
+color: #2c3e50; 
+letter-spacing: 1px;
+display: flex; 
+align-items: center;
+padding: 8px 0; 
+}
+
+/* Barra de Pesquisa no Header */
+.search-bar-wrapper {
+flex-grow: 1; 
+display: flex;
+align-items: center;
+background-color: #f0f0f0; 
+border-radius: 22px; 
+padding: 10px 15px; 
+max-width: 500px; 
+margin: 0 25px; 
+height: 44px; 
+box-sizing: border-box;
+}
+
+.search-icon {
+color: #777;
+margin-right: 10px;
+font-size: 1rem; 
+}
+
+.search-input {
+border: none;
+outline: none;
+background-color: transparent; 
+width: 100%;
+font-size: 0.95rem; 
+color: #333;
+height: 100%; 
+}
+
+.search-input::placeholder {
+color: #888;
+}
+
+
+/* Bloco da Direita: Carrinho e Ações do Usuário */
+.header-actions-right {
+display: flex;
+align-items: center;
+gap: 25px; 
+flex-shrink: 0; 
+}
+
+/* Ícone do Carrinho no Header */
+.cart-icon-wrapper {
+position: relative;
+display: flex; 
+align-items: center;
+justify-content: center;
+padding: 8px; 
+border-radius: 50%; 
+text-decoration: none;
+transition: background-color 0.3s ease, color 0.3s ease;
+height: 44px; 
+width: 44px;  
+box-sizing: border-box;
+}
+
+.cart-icon {
+font-size: 1.5rem; 
+color: #000000; 
+transition: color 0.3s ease;
+}
+
+.cart-icon-wrapper.active {
+background-color: #fd7e14; 
+}
+
+.cart-icon.active {
+color: #ffffff; 
+}
+
+.cart-notification-badge {
+position: absolute;
+top: 2px;  
+right: 2px; 
+background-color: #dc3545; 
+color: white;
+border-radius: 50%;
+min-width: 20px; 
+height: 20px;
+font-size: 0.75rem;
+font-weight: bold;
+display: flex;
+align-items: center;
+justify-content: center;
+border: 1px solid white; 
+line-height: 1;
+padding: 0 3px; 
+}
+
+
+/* Ações do Usuário (Login, Cadastro, Dashboard, Sair) */
+.user-actions {
+display: flex;
+align-items: center;
+gap: 12px; 
+}
+
+.user-actions .nav-link,
+.user-actions .nav-button {
+display: inline-flex; 
+align-items: center;  
+justify-content: center; 
+padding: 8px 15px;    
+height: 44px;           
+box-sizing: border-box; 
+border-radius: 22px;  
+text-decoration: none;
+font-size: 0.9rem; 
+font-weight: 500;
+transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+white-space: nowrap; 
+}
+
+.user-actions .nav-link { 
+color: #555; 
+border: 1px solid transparent; 
+}
+
+.user-actions .nav-link:hover {
+color: #fd7e14; 
+background-color: #f8f9fa; 
+}
+
+.user-actions .signup-button {
+background-color: #fd7e14; 
+color: white;
+border: 1px solid #fd7e14;
+}
+.user-actions .signup-button:hover {
+background-color: #e66a00;
+border-color: #e66a00;
+}
+
+.user-actions .logout-button {
+background-color: transparent;
+color: #fd7e14; 
+border: 1px solid #fd7e14;
+}
+
+.user-actions .logout-button:hover {
+background-color: #fd7e14;
+color: white;
+}
+
+
+/* Estilos do Footer */
+.app-footer {
+background-color: #f1f3f5; 
+color: #6c757d; 
+padding: 40px 0 20px; 
+border-top: 1px solid #dee2e6; 
+}
+
+.footer-container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 0 20px;
+}
+
+.footer-logo {
+text-align: center;
+margin-bottom: 30px;
+}
+
+.footer-logo a {
+text-decoration: none;
+font-size: 24px;
+font-weight: 600;
+color: #343a40; 
+}
+
+.footer-sections {
+display: flex;
+flex-wrap: wrap; 
+justify-content: space-between; 
+gap: 30px; 
+margin-bottom: 30px;
+}
+
+.footer-section {
+flex: 1; 
+min-width: 220px; 
+}
+
+.footer-section h4 {
+font-size: 16px;
+font-weight: 600;
+color: #343a40; 
+margin-bottom: 15px;
+text-transform: uppercase;
+}
+
+.footer-section ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.footer-section ul li {
+margin-bottom: 10px; 
+}
+
+.footer-section ul li a {
+text-decoration: none;
+color: #6c757d; 
+transition: color 0.2s ease;
+}
+
+.footer-section ul li a:hover {
+color: #fd7e14; 
+}
+
+.social-links {
+display: flex;
+gap: 18px; 
+}
+
+.social-links a {
+color: #495057; 
+font-size: 22px; 
+transition: color 0.2s ease;
+}
+
+.social-links a:hover {
+color: #fd7e14; 
+}
+
+.footer-copyright {
+text-align: center;
+padding-top: 20px;
+border-top: 1px solid #dee2e6; 
+font-size: 14px;
+color: #6c757d;
+}
 
 /* ----- Responsividade ----- */
 
-/* Telas Médias e Maiores (Tablets e Desktops pequenos) */
-@media (min-width: 768px) {
-  .login-box {
-    padding: 40px 50px;
+/* Telas Médias (Tablets e Desktops pequenos) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .search-bar-wrapper {
+      max-width: 100%; 
+      margin: 0 15px; 
+      height: 40px; 
+      padding: 6px 12px;
   }
+  .logo a,
+  .cart-icon-wrapper,
+  .user-actions .nav-link,
+  .user-actions .nav-button {
+      height: 40px; 
+      padding-top: 6px; 
+      padding-bottom: 6px;
+  }
+  .cart-icon {
+      font-size: 1.4rem;
+  }
+  .logo a {
+      font-size: 24px;
+  }
+  .user-actions .nav-link, .user-actions .nav-button {
+      font-size: 0.85rem;
+      padding-left: 12px;
+      padding-right: 12px;
+  }
+  .header-actions-right {
+      gap: 15px;
+  }
+  .user-actions {
+      gap: 8px;
+  }
+}
 
+@media (min-width: 768px) { /* Aplica a partir de tablet */
   .form-row {
-    flex-direction: row;
-    /* Campos lado a lado */
-    gap: 24px;
-    /* Espaço entre os campos na mesma linha */
+      flex-direction: row; 
+      gap: 24px; 
   }
 
   .form-row .form-group {
-    flex: 1;
-    /* Faz com que os campos na mesma linha dividam o espaço */
-  }
-
-  .login-box.signup-box {
-    /* max-width já é 700px, o que é bom para 2 colunas */
+      flex: 1; 
   }
 }
 
 /* Telas Pequenas (Mobiles) */
 @media (max-width: 767px) {
-  body {
-    padding: 10px;
-    /* Menos padding no body em telas pequenas */
-  }
-
   .login-box {
-    padding: 25px 20px;
-    margin: 15px;
-    /* Garante que não cole nas bordas */
+      padding: 25px 20px;
+      margin: 15px 0; 
   }
 
   .login-box h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
+      font-size: 24px;
+      margin-bottom: 20px;
   }
 
   .login-form {
-    gap: 15px;
+      gap: 15px;
   }
 
   .form-group input[type="text"],
   .form-group input[type="email"],
   .form-group input[type="password"],
   .form-group input[type="tel"] {
-    padding: 10px 12px;
-    font-size: 15px;
+      /* padding-right será sobrescrito por .input-wrapper-with-icon input abaixo */
+      font-size: 15px;
+  }
+  .input-wrapper-with-icon input[type="text"],
+  .input-wrapper-with-icon input[type="password"] {
+      padding-right: 40px !important; 
   }
 
+
   .login-form button[type="submit"] {
-    padding: 10px 12px;
-    font-size: 15px;
+      padding: 10px 12px;
+      font-size: 15px;
   }
 
   .login-box p {
-    font-size: 13px;
-    margin-top: 20px;
+      font-size: 13px;
+      margin-top: 20px;
   }
 
+  /* Responsividade do Header com busca */
+  .app-header {
+    padding: 10px 0;
+  }
+  .header-container {
+    flex-direction: column; 
+    gap: 12px; 
+    padding: 0 15px; 
+  }
+  .search-bar-wrapper {
+    order: 2; 
+    width: 100%; 
+    max-width: none; 
+    margin: 0;
+    height: 40px;
+    padding: 6px 12px; 
+  }
+  .search-input {
+      font-size: 0.9rem;
+  }
+  .logo {
+    order: 1;
+    padding-bottom: 0; 
+  }
+  .logo a {
+      padding: 6px 0; 
+      font-size: 24px; /* Ajuste para mobile */
+  }
+  .header-actions-right {
+    order: 3;
+    width: 100%;
+    justify-content: space-between; 
+    gap: 10px; 
+    margin-top: 5px;
+  }
+  .main-nav { 
+      display: none; 
+  }
+  .user-actions .nav-button, .user-actions .nav-link {
+      margin-left: 0; /* Removida margem esquerda, gap cuida disso */
+      padding: 6px 10px; /* Padding menor */
+      font-size: 0.85rem; /* Fonte menor */
+      height: 38px; /* Altura ligeiramente menor */
+  }
+   .cart-icon-wrapper {
+      padding: 6px; 
+      height: 38px;
+      width: 38px;
+  }
+  .cart-icon {
+      font-size: 1.3rem;
+  }
+  .cart-notification-badge {
+      min-width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      top: 0px;
+      right: 0px;
+  }
+
+
+  /* Responsividade do Footer */
+  .footer-sections {
+    flex-direction: column; 
+    align-items: flex-start; 
+    text-align: left; 
+    gap: 20px; 
+  }
+  .footer-section {
+    min-width: 100%; 
+    margin-bottom: 20px;
+  }
+  .social-links {
+    justify-content: flex-start; 
+  }
+  .footer-logo {
+      text-align: left; 
+      font-size: 22px; /* Ajuste para mobile */
+  }
 }

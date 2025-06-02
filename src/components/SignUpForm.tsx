@@ -1,11 +1,12 @@
 // src/components/SignUpForm.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react'; // Removido useEffect
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
-import { cpf as cpfValidator } from 'cpf-cnpj-validator'; // Validador de CPF
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Ícones para senha
+// axios não é mais necessário aqui se a busca de CEP foi removida
+// import axios from 'axios';
+import { cpf as cpfValidator } from 'cpf-cnpj-validator';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-// Funções de máscara (mantidas)
+// Funções de máscara (CPF e Celular mantidas)
 const maskCPF = (value: string) => {
     return value
         .replace(/\D/g, '')
@@ -22,91 +23,46 @@ const maskCelular = (value: string) => {
         .replace(/(-\d{4})\d+?$/, '$1');
 };
 
-const maskCEP = (value: string) => {
-    return value
-        .replace(/\D/g, '')
-        .replace(/(\d{5})(\d)/, '$1-$2')
-        .replace(/(-\d{3})\d+?$/, '$1');
-};
-
+// Novo FormInputs sem endereço, com email
 type FormInputs = {
     nome: string;
     sobrenome: string;
+    email: string; // Adicionado Email
     cpf: string;
     celular: string;
     senha: string;
     confirmarSenha: string;
-    cep: string;
-    rua: string;
-    numero: string;
-    complemento?: string;
-    bairro: string;
-    cidade: string;
-    estado: string;
 };
 
 const SignUpForm: React.FC = () => {
-    const { register, handleSubmit, control, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormInputs>({
+    const { register, handleSubmit, control, watch, formState: { errors, isSubmitting } } = useForm<FormInputs>({
         mode: 'onBlur'
     });
     const [apiError, setApiError] = useState<string>('');
-    const [isCepLoading, setIsCepLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-    const cepValue = watch('cep');
     const senhaValue = watch('senha');
 
-    useEffect(() => {
-        // ... (lógica do CEP mantida igual à versão anterior)
-        const fetchAddress = async (cep: string) => {
-            const cleanCep = cep.replace(/\D/g, '');
-            if (cleanCep.length === 8) {
-                setIsCepLoading(true);
-                setApiError('');
-                try {
-                    const response = await axios.get(`https://viacep.com.br/ws/${cleanCep}/json/`);
-                    if (response.data.erro) {
-                        setApiError('CEP não encontrado.');
-                        setValue('rua', '');
-                        setValue('bairro', '');
-                        setValue('cidade', '');
-                        setValue('estado', '');
-                    } else {
-                        setValue('rua', response.data.logradouro || '');
-                        setValue('bairro', response.data.bairro || '');
-                        setValue('cidade', response.data.localidade || '');
-                        setValue('estado', response.data.uf || '');
-                    }
-                } catch (error) {
-                    setApiError('Erro ao buscar CEP. Tente novamente.');
-                } finally {
-                    setIsCepLoading(false);
-                }
-            } else if (cleanCep.length === 0) {
-                setValue('rua', '');
-                setValue('bairro', '');
-                setValue('cidade', '');
-                setValue('estado', '');
-                setApiError('');
-            }
-        };
-
-        if (cepValue) {
-            fetchAddress(cepValue);
-        } else {
-             setValue('rua', '');
-             setValue('bairro', '');
-             setValue('cidade', '');
-             setValue('estado', '');
-             setApiError('');
-        }
-    }, [cepValue, setValue]);
+    // Lógica de busca de CEP foi removida
 
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         setApiError('');
-        console.log('Dados do formulário de cadastro:', data);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Dados do formulário de cadastro (sem endereço):', data);
+        // Aqui você faria a chamada para sua API de backend para cadastrar o usuário
+        // Exemplo:
+        // try {
+        //   await axios.post('/api/auth/signup', data);
+        //   alert('Cadastro realizado com sucesso! Complete seu perfil adicionando um endereço.');
+        //   // Redirecionar para login ou para a nova página de perfil/endereço
+        // } catch (error) {
+        //   if (axios.isAxiosError(error) && error.response) {
+        //     setApiError(error.response.data.message || 'Erro ao cadastrar.');
+        //   } else {
+        //     setApiError('Ocorreu um erro. Tente novamente.');
+        //   }
+        // }
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulação
     };
 
     return (
@@ -126,6 +82,23 @@ const SignUpForm: React.FC = () => {
                 </div>
             </div>
 
+            <div className="form-group"> {/* Email agora ocupa uma linha inteira, ou pode ser colocado num form-row */}
+                <label htmlFor="email-signup">Email:</label>
+                <input
+                    id="email-signup"
+                    type="email"
+                    {...register('email', {
+                        required: 'Email é obrigatório',
+                        pattern: {
+                            value: /^\S+@\S+\.\S+$/,
+                            message: 'Email inválido'
+                        }
+                    })}
+                    autoComplete="email"
+                />
+                {errors.email && <p className="input-error-message">{errors.email.message}</p>}
+            </div>
+
             <div className="form-row">
                 <div className="form-group">
                     <label htmlFor="cpf">CPF:</label>
@@ -134,9 +107,8 @@ const SignUpForm: React.FC = () => {
                         control={control}
                         rules={{
                             required: 'CPF é obrigatório',
-                            validate: (value) =>
-                                cpfValidator.isValid(value) || 'CPF inválido.',
-                            pattern: { // Manter a pattern para feedback imediato do formato, mas a validação real é no validate
+                            validate: (value) => cpfValidator.isValid(value) || 'CPF inválido.',
+                            pattern: {
                                 value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
                                 message: 'Formato esperado: XXX.XXX.XXX-XX'
                             }
@@ -173,7 +145,7 @@ const SignUpForm: React.FC = () => {
                                 {...field}
                                 onChange={(e) => field.onChange(maskCelular(e.target.value))}
                                 maxLength={15}
-                                autoComplete="off"
+                                autoComplete="tel"
                             />
                         )}
                     />
@@ -183,10 +155,10 @@ const SignUpForm: React.FC = () => {
 
             <div className="form-row">
                 <div className="form-group">
-                    <label htmlFor="senha">Senha:</label>
+                    <label htmlFor="senha-signup">Senha:</label>
                     <div className="input-wrapper-with-icon">
                         <input
-                            id="senha"
+                            id="senha-signup"
                             type={showPassword ? "text" : "password"}
                             {...register('senha', {
                                 required: 'Senha é obrigatória',
@@ -207,10 +179,10 @@ const SignUpForm: React.FC = () => {
                     {errors.senha && <p className="input-error-message">{errors.senha.message}</p>}
                 </div>
                 <div className="form-group">
-                    <label htmlFor="confirmarSenha">Confirmar Senha:</label>
+                    <label htmlFor="confirmarSenha-signup">Confirmar Senha:</label>
                     <div className="input-wrapper-with-icon">
                         <input
-                            id="confirmarSenha"
+                            id="confirmarSenha-signup"
                             type={showConfirmPassword ? "text" : "password"}
                             {...register('confirmarSenha', {
                                 required: 'Confirmação de senha é obrigatória',
@@ -231,75 +203,9 @@ const SignUpForm: React.FC = () => {
                 </div>
             </div>
 
-            <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '10px 0' }} />
+            {/* Campos de endereço removidos daqui */}
 
-            {/* Campos de Endereço (mantidos como na versão anterior) */}
-            <div className="form-group">
-                <label htmlFor="cep">CEP:</label>
-                <Controller
-                    name="cep"
-                    control={control}
-                    rules={{
-                        required: 'CEP é obrigatório',
-                        pattern: {
-                            value: /^\d{5}-\d{3}$/,
-                            message: 'CEP inválido. Formato: XXXXX-XXX'
-                        }
-                    }}
-                    render={({ field }) => (
-                        <input
-                            id="cep"
-                            type="text"
-                            {...field}
-                            onChange={(e) => field.onChange(maskCEP(e.target.value))}
-                            maxLength={9}
-                            autoComplete="postal-code"
-                        />
-                    )}
-                />
-                {isCepLoading && <p className="cep-loading-message">Buscando CEP...</p>}
-                {errors.cep && <p className="input-error-message">{errors.cep.message}</p>}
-            </div>
-
-            <div className="form-row">
-                <div className="form-group" style={{ flexGrow: 2 }}>
-                    <label htmlFor="rua">Rua:</label>
-                    <input id="rua" type="text" {...register('rua', { required: 'Rua é obrigatória' })} autoComplete="street-address" />
-                    {errors.rua && <p className="input-error-message">{errors.rua.message}</p>}
-                </div>
-                <div className="form-group" style={{ flexGrow: 1 }}>
-                    <label htmlFor="numero">Número Residencial:</label>
-                    <input id="numero" type="text" {...register('numero', { required: 'Número é obrigatório' })} autoComplete="address-line2" />
-                    {errors.numero && <p className="input-error-message">{errors.numero.message}</p>}
-                </div>
-            </div>
-            
-            <div className="form-group">
-                <label htmlFor="complemento">Complemento: (Opcional)</label>
-                <input id="complemento" type="text" {...register('complemento')} autoComplete="address-line3"/>
-            </div>
-
-            <div className="form-row">
-                <div className="form-group">
-                    <label htmlFor="bairro">Bairro:</label>
-                    <input id="bairro" type="text" {...register('bairro', { required: 'Bairro é obrigatório' })} autoComplete="address-level2"/>
-                    {errors.bairro && <p className="input-error-message">{errors.bairro.message}</p>}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="cidade">Cidade:</label>
-                    <input id="cidade" type="text" {...register('cidade', { required: 'Cidade é obrigatória' })} autoComplete="address-level1" />
-                    {errors.cidade && <p className="input-error-message">{errors.cidade.message}</p>}
-                </div>
-                <div className="form-group" style={{ flexBasis: '100px', flexGrow: 0 }}>
-                    <label htmlFor="estado">Estado:</label>
-                    <input id="estado" type="text" {...register('estado', { required: 'Estado é obrigatório' })} autoComplete="administrative-area" />
-                    {errors.estado && <p className="input-error-message">{errors.estado.message}</p>}
-                </div>
-            </div>
-            {/* Fim dos campos de Endereço */}
-
-
-            <button type="submit" disabled={isSubmitting || isCepLoading}>
+            <button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Cadastrando...' : 'Criar Conta'}
             </button>
         </form>
