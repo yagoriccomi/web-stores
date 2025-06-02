@@ -1,0 +1,20 @@
+# Estágio de Build (onde sua aplicação é construída)
+FROM node:alpine AS builder 
+
+WORKDIR /app
+
+# Copiar apenas os arquivos de definição de pacotes primeiro
+COPY package*.json ./
+# COPY yarn.lock ./ # Se estiver usando Yarn
+
+# Instalar dependências
+RUN npm install
+# RUN yarn install # Se estiver usando Yarn
+
+# Copiar o restante do código da aplicação
+COPY . .
+
+# Construir a aplicação
+RUN npm run dev
+
+EXPOSE 5173
