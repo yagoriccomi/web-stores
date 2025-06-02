@@ -3,7 +3,7 @@ version: '3.8' # Define a versão do Docker Compose
 services:
   # Serviço para o ambiente de desenvolvimento
   #dev:
-    container_name: lojinha-front-dev
+    #container_name: lojinha-front-dev
     #build:
       #context: . # O diretório atual (onde está o Dockerfile.dev)
       #d#ockerfile: Dockerfile.Dev # Especifica qual Dockerfile usar
