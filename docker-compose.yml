@@ -2,22 +2,22 @@ version: '3.8' # Define a versão do Docker Compose
 
 services:
   # Serviço para o ambiente de desenvolvimento
-  dev:
+  #dev:
     container_name: lojinha-front-dev
-    build:
-      context: . # O diretório atual (onde está o Dockerfile.dev)
-      dockerfile: Dockerfile.Dev # Especifica qual Dockerfile usar
-    ports:
-      - "80:5173" # Mapeia porta_do_host:porta_do_container. Ajuste 3000 se seu dev server usar outra porta.
-    volumes:
+    #build:
+      #context: . # O diretório atual (onde está o Dockerfile.dev)
+      #d#ockerfile: Dockerfile.Dev # Especifica qual Dockerfile usar
+    #ports:
+      #- "80:5173" # Mapeia porta_do_host:porta_do_container. Ajuste 3000 se seu dev server usar outra porta.
+    #volumes:
       # Mapeia o código-fonte local para dentro do contêiner.
       # Isso permite o hot-reloading: mudanças no seu código local refletem instantaneamente no contêiner.
-      - .:/app
+      #- .:/app
       # Adiciona um volume anônimo para node_modules para evitar que a pasta local
       # (que pode ter binários de um SO diferente) sobrescreva a node_modules do contêiner.
-      - /app/node_modules
-    environment:
-      - NODE_ENV=development
+      #- /app/node_modules
+    #environment:
+      #- NODE_ENV=development
       # Descomente a linha abaixo se o hot-reload não funcionar bem no Windows/WSL:
       # - CHOKIDAR_USEPOLLING=true
 
