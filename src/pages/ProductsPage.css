@@ -139,3 +139,85 @@
       font-size: 1.3rem;
     }
   }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px; /* Aumentar margem superior para separar bem dos produtos */
+    margin-bottom: 20px;
+    padding-bottom: 20px; /* Espaço extra abaixo da paginação */
+    gap: 5px; /* Reduzir gap entre botões */
+    flex-wrap: wrap; /* Permitir quebra de linha em telas menores */
+  }
+  
+  .pagination-controls button,
+  .pagination-controls .page-info,
+  .pagination-controls .pagination-ellipsis {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+    color: #fd7e14; /* Cor laranja para combinar com o tema */
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    margin: 3px; /* Pequena margem para botões que quebram linha */
+  }
+  
+  .pagination-controls button:hover:not(:disabled) {
+    background-color: #fd7e14;
+    color: white;
+    border-color: #fd7e14;
+  }
+  
+  .pagination-controls button:disabled {
+    color: #adb5bd; /* Cinza mais claro para desabilitado */
+    background-color: #f8f9fa; /* Fundo sutil para desabilitado */
+    border-color: #dee2e6;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls button.active {
+    background-color: #fd7e14;
+    color: white;
+    border-color: #e66a00; /* Laranja mais escuro para borda ativa */
+    font-weight: bold;
+  }
+  
+  .pagination-controls .page-info {
+    border: none;
+    background-color: transparent;
+    color: #495057; /* Cor de texto padrão */
+    cursor: default;
+    padding-right: 15px; /* Mais espaço à direita da informação da página */
+    font-weight: 500;
+  }
+  .pagination-controls .pagination-ellipsis {
+    border: none;
+    background-color: transparent;
+    color: #495057;
+    padding: 8px 5px; /* Ajustar padding da elipse */
+    cursor: default;
+    font-weight: bold;
+  }
+  
+  /* Responsividade para paginação */
+  @media (max-width: 767px) {
+    .pagination-controls {
+      gap: 3px; /* Gap ainda menor em mobile */
+    }
+    .pagination-controls button,
+    .pagination-controls .page-info,
+    .pagination-controls .pagination-ellipsis {
+      padding: 6px 10px; /* Padding menor para botões em mobile */
+      font-size: 0.85rem; /* Fonte menor */
+    }
+    .pagination-controls .page-info {
+      padding-right: 8px; /* Ajustar espaço da informação da página em mobile */
+      min-width: 100px; /* Para garantir que não quebre tanto */
+      text-align: center;
+      flex-basis: 100%; /* Ocupar toda a largura e centralizar */
+      margin-bottom: 10px;
+    }
+  }

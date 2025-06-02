@@ -21,7 +21,7 @@ const Header: React.FC = () => {
     <header className="app-header">
       <div className="header-container">
         <div className="logo">
-          <Link to="/">DE MAXIN.</Link>
+          <Link to="/">NOSSA TENDA</Link>
         </div>
 
         {/* Barra de Pesquisa Centralizada */}

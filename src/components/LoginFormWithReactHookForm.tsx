@@ -1,6 +1,6 @@
 // src/components/LoginFormWithReactHookForm.tsx
 import React, { useState } from 'react'; //
-import { useForm, SubmitHandler } from 'react-hook-form'; //
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
 type Inputs = {
   email: string; //
