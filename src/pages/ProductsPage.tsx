@@ -14,8 +14,8 @@ import type { ActiveFilters } from '../components/ProductFilters';
 // Removed duplicate import of ActiveFilters
 
 // URLs para o banner (substitua por suas imagens reais ou de um serviço de placeholder)
-const DESKTOP_BANNER_URL = "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg";
-const MOBILE_BANNER_URL = "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg";
+const DESKTOP_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
+const MOBILE_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
 
 
 // Helper para converter string de preço para número
