@@ -21,7 +21,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   activeFilters,
   currentSort,
 }) => {
-  // ... rest of the component code
+  console.log('ProductFilters - Received activeFilters:', activeFilters); // <-- ADD THIS LOG
+
+  // Defensive check to prevent crash and provide more info
+  if (!activeFilters) {
+    console.error('CRITICAL: activeFilters is undefined in ProductFilters component!');
+    return <div>Erro ao carregar filtros...</div>; // Or null, or a more specific fallback
+  }
+
   return (
     <div className="product-filters-bar">
       {/* Filters */}
@@ -29,7 +36,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         <label htmlFor="filter-price">Preço:</label>
         <select
           id="filter-price"
-          value={activeFilters.price}
+          value={activeFilters.price} // This line should now be safer
           onChange={(e) => onFilterChange('price', e.target.value)}
         >
           <option value="all">Todos os Preços</option>

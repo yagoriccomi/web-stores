@@ -1,12 +1,15 @@
 // backend/server.js
 import express from 'express';
 import dotenv from 'dotenv';
+
+// Carregar variáveis de ambiente do arquivo .env na raiz da pasta backend
+dotenv.config();
+
 import cors from 'cors';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 
-// Carregar variáveis de ambiente do arquivo .env na raiz da pasta backend
-dotenv.config();
+
 
 // Conectar ao MongoDB
 connectDB();
