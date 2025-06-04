@@ -1,18 +1,30 @@
 // src/pages/ProductsPage.tsx
-import React, { useState, useEffect, useMemo } from 'react'; // << MODIFICADO (useMemo)
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // <<<--- ADICIONE ESTA LINHA
+import axios from 'axios'; // Importar axios para chamadas HTTP
 import './ProductsPage.css';
-import { useCart } from '../contexts/CartContext';
-import type { Product } from '../contexts/CartContext'; // A interface Product foi atualizada
+import { useCart, type Product as CartProduct } from '../contexts/CartContext'; // Renomear Product para evitar conflito
 import { useSearch } from '../contexts/SearchContext';
-// import { allMockProducts } from '../contexts/fakebd'; // <<<--- REMOVA OU COMENTE ESTA LINHA
-
+// Removido: import { allMockProducts } from '../contexts/fakebd';
 import ProductBanner from '../components/ProductBanner';
-import ProductFilters from '../components/ProductFilters';
-import type { ActiveFilters } from '../components/ProductFilters'; // Correct import
+import ProductFilters, { type ActiveFilters } from '../components/ProductFilters';
+
+// Definir a interface do Produto como esperado da sua API
+// Ajuste conforme a estrutura exata dos dados retornados por /api/products
+export interface APIProduct {
+  id: string; // ou number, dependendo do seu backend (_id do MongoDB é string)
+  name: string;
+  description: string;
+  price: string; // Mantendo como string conforme seu backend formata
+  iconPlaceholder: string; // Ou o nome do campo real, ex: imageUrl
+  imageUrl?: string; // Adicionado como opcional
+  category?: string;
+  stock?: number;
+  // Adicione outros campos que sua API retorna
+}
 
 
+// URLs do banner
 const DESKTOP_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
 const MOBILE_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
 
@@ -21,19 +33,75 @@ const parsePrice = (priceString: string): number => {
   return parseFloat(priceString.replace('R$', '').replace('.', '').replace(',', '.').trim());
 };
 
-interface PaginationControlsProps { /* ... (sem alterações) ... */ }
-const PaginationControls: React.FC<PaginationControlsProps> = ({ currentPage, totalPages, onPageChange }) => { /* ... (sem alterações) ... */ };
+interface PaginationControlsProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
+const PaginationControls: React.FC<PaginationControlsProps> = ({ currentPage, totalPages, onPageChange }) => {
+  const buildPageNumbers = (): (number | string)[] => {
+    const pageNumbers: (number | string)[] = [];
+    if (totalPages <= 1) return [];
+    pageNumbers.push(1);
+    const range = 1;
+    let showLeftEllipsis = false;
+    let showRightEllipsis = false;
+    let startPageForLoop = Math.max(2, currentPage - range);
+    let endPageForLoop = Math.min(totalPages - 1, currentPage + range);
+
+    if (currentPage - range > 2) showLeftEllipsis = true;
+    if (currentPage + range < totalPages - 1) showRightEllipsis = true;
+
+    if (showLeftEllipsis) pageNumbers.push('...');
+    for (let i = startPageForLoop; i <= endPageForLoop; i++) {
+      if (!pageNumbers.includes(i)) pageNumbers.push(i);
+    }
+    if (showRightEllipsis && !pageNumbers.includes('...')) pageNumbers.push('...');
+    if (totalPages > 1 && !pageNumbers.includes(totalPages)) pageNumbers.push(totalPages);
+    return [...new Set(pageNumbers)];
+  };
+
+  const pageNumbersToDisplay = buildPageNumbers();
+
+  if (totalPages === 0) return null;
+  // Ajustado para verificar se há produtos antes de mostrar "Página 1 de 1"
+  if (totalPages === 1) {
+     // A condição `allMockProducts.length > 0` será substituída pela verificação dos produtos carregados
+     // Se não houver produtos carregados, não mostraremos a paginação.
+     // O componente principal lidará com a mensagem de "nenhum produto".
+    return null; // Ou mostrar "Página 1 de 1" apenas se houver produtos
+  }
+
+
+  return (
+    <div className="pagination-controls">
+      <span className="page-info">Página {currentPage} de {totalPages}</span>
+      <button onClick={() => onPageChange(1)} disabled={currentPage === 1}>Primeira</button>
+      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
+      {pageNumbersToDisplay.map((page, index) =>
+        typeof page === 'number' ? (
+          <button key={page} onClick={() => onPageChange(page)} className={page === currentPage ? 'active' : ''}>{page}</button>
+        ) : (
+          <span key={`ellipsis-${index}`} className="pagination-ellipsis">{page}</span>
+        )
+      )}
+      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>Próxima</button>
+      <button onClick={() => onPageChange(totalPages)} disabled={currentPage === totalPages}>Última</button>
+    </div>
+  );
+};
 
 const ProductsPage: React.FC = () => {
   const { addToCart } = useCart();
   const { searchTerm } = useSearch();
-  const [allProducts, setAllProducts] = useState<Product[]>([]); // <<<--- NOVO ESTADO PARA PRODUTOS DA API
-  const [isLoading, setIsLoading] = useState<boolean>(true); // <<<--- NOVO ESTADO PARA LOADING
-  const [error, setError] = useState<string | null>(null); // <<<--- NOVO ESTADO PARA ERRO
-
   const [currentPage, setCurrentPage] = useState<number>(1);
   const productsPerPage = 20;
+
+  // Estados para dados da API
+  const [allProducts, setAllProducts] = useState<APIProduct[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
     price: 'all',
@@ -48,35 +116,57 @@ const ProductsPage: React.FC = () => {
       setIsLoading(true);
       setError(null);
       try {
-        // Ajuste a URL da API conforme necessário
-        const response = await axios.get('http://localhost:5001/api/products');
+        // Seu backend está em '/api/products'
+        // O frontend está em localhost:5173, backend em localhost:5001
+        // Certifique-se que o CORS no backend permite requisições de localhost:5173
+        const response = await axios.get<APIProduct[]>('http://localhost:5001/api/products');
         setAllProducts(response.data);
-      } catch (err: any) {
+      } catch (err) {
         console.error("Erro ao buscar produtos:", err);
-        setError(err.message || 'Falha ao carregar produtos.');
+        setError('Falha ao carregar produtos. Tente novamente mais tarde.');
       } finally {
         setIsLoading(false);
       }
     };
-    fetchProducts();
-  }, []); // Executa uma vez ao montar o componente
 
-  const handleAddToCart = (product: Product) => { /* ... (sem alterações) ... */ };
-  const handleFilterChange = (filterType: keyof ActiveFilters, value: string) => { /* ... (sem alterações) ... */ };
-  const handleSortChange = (value: string) => { /* ... (sem alterações) ... */ };
+    fetchProducts();
+  }, []); // Array de dependências vazio para rodar apenas uma vez ao montar
+
+  const handleAddToCart = (product: APIProduct) => {
+    // Adapte o produto da API para o formato esperado pelo CartContext, se necessário
+    // No seu caso, a interface Product do CartContext é similar, mas vamos garantir
+    const productForCart: CartProduct = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      iconPlaceholder: product.iconPlaceholder || product.imageUrl || '🛍️', // Fallback
+      imageUrl: product.imageUrl || '🛍️',
+    };
+    addToCart(productForCart);
+  };
+
+  const handleFilterChange = (filterType: keyof ActiveFilters, value: string) => {
+    setActiveFilters(prev => ({ ...prev, [filterType]: value }));
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSortOrder(value);
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, activeFilters, sortOrder]); // <<<--- activeFilters e sortOrder adicionados como dependência
+  }, [searchTerm]);
 
-  // Lógica de filtragem e ordenação AGORA USA `allProducts`
-  const processedProducts = useMemo(() => { // <<<--- useMemo para otimizar
-    let tempProducts = [...allProducts];
+  const processedProducts = useMemo(() => {
+    let tempProducts = [...allProducts]; // AGORA USA OS PRODUTOS DA API
 
     if (searchTerm) {
       tempProducts = tempProducts.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
@@ -90,73 +180,89 @@ const ProductsPage: React.FC = () => {
         return true;
       });
     }
-    // Filtros de size e color (se implementados nos dados do produto)
-    // ...
 
-    if (sortOrder === 'az') {
-      tempProducts.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortOrder === 'za') {
-      tempProducts.sort((a, b) => b.name.localeCompare(a.name));
-    } else if (sortOrder === 'priceLowHigh') {
-      tempProducts.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
-    } else if (sortOrder === 'priceHighLow') {
-      tempProducts.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+    switch (sortOrder) {
+      case 'az':
+        tempProducts.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'za':
+        tempProducts.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'priceLowHigh':
+        tempProducts.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+        break;
+      case 'priceHighLow':
+        tempProducts.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+        break;
+      default:
+        break;
     }
-
     return tempProducts;
-  }, [allProducts, searchTerm, activeFilters, sortOrder]); // <<<--- Dependências do useMemo
+  }, [searchTerm, activeFilters, sortOrder, allProducts]); // Adicionado allProducts às dependências
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = processedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(processedProducts.length / productsPerPage);
 
-  const handlePageChange = (pageNumber: number) => { /* ... (sem alterações) ... */ };
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      window.scrollTo(0, 0);
+    }
+  };
 
   if (isLoading) {
-    return <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem' }}>Carregando produtos...</div>;
+    return <div className="products-page-container"><p className="loading-message" style={{textAlign: 'center', fontSize: '1.2rem', marginTop: '50px'}}>Carregando produtos...</p></div>;
   }
 
   if (error) {
-    return <div style={{ textAlign: 'center', padding: '50px', fontSize: '1.2rem', color: 'red' }}>Erro ao carregar produtos: {error}</div>;
+    return <div className="products-page-container"><p className="error-message" style={{textAlign: 'center', color: 'red', fontSize: '1.2rem', marginTop: '50px'}}>{error}</p></div>;
   }
 
-  console.log('ProductsPage - Passing activeFilters:', activeFilters); // <-- ADD THIS LOG
+  const NoProductsMessage = () => {
+    // Agora verificamos 'allProducts' para a mensagem inicial e 'processedProducts' para filtros/busca
+    if (allProducts.length === 0 && !isLoading) { // Se a busca inicial da API não retornou nada
+      return <p className="no-products-message">Nenhum produto disponível no momento.</p>;
+    }
+    if (processedProducts.length === 0 && !isLoading) { // Se filtros/busca não encontraram nada
+      if (searchTerm) {
+        return <p className="no-products-message">Nenhum produto encontrado para "{searchTerm}". Tente refinar seus filtros ou busca.</p>;
+      }
+      return <p className="no-products-message">Nenhum produto corresponde aos filtros selecionados no momento.</p>;
+    }
+    return null;
+  };
 
   return (
     <div className="products-page-container">
-      <ProductBanner 
-        desktopImage={DESKTOP_BANNER_URL} 
-        mobileImage={MOBILE_BANNER_URL} 
-        altText="Descubra Nossos Produtos Zen" 
+      <ProductBanner
+        desktopImage={DESKTOP_BANNER_URL}
+        mobileImage={MOBILE_BANNER_URL}
+        altText="Descubra Nossos Produtos Zen"
       />
+
       <ProductFilters
         onFilterChange={handleFilterChange}
         onSortChange={handleSortChange}
         activeFilters={activeFilters}
         currentSort={sortOrder}
       />
-      {processedProducts.length === 0 && searchTerm && (
-        <p className="no-products-message">Nenhum produto encontrado para "{searchTerm}". Tente refinar seus filtros ou busca.</p>
-      )}
-      {processedProducts.length === 0 && !searchTerm && allProducts.length > 0 && (
-        <p className="no-products-message">Nenhum produto corresponde aos filtros selecionados no momento.</p>
-      )}
-      {allProducts.length === 0 && !isLoading && ( // <<<--- Mensagem se a API não retornar produtos
-        <p className="no-products-message">Nenhum produto disponível no momento.</p>
-      )}
+
+      <NoProductsMessage />
 
       {currentProducts.length > 0 && (
         <div className="product-grid">
           {currentProducts.map((product) => (
             <div key={product.id} className="product-item">
-              <Link to={`/products/${product.id}`} className="product-link"> {/* Rota de detalhe não implementada */}
-                <div className="product-icon-container" style={{ backgroundColor: 'transparent' }}> {/* Alterado para imagem */}
+              <Link to={`/products/${product.id}`} className="product-link">
+                {/* Priorizar imageUrl se disponível, senão iconPlaceholder */}
+                <div className="product-image-container" style={{backgroundColor: product.imageUrl ? 'transparent' : '#f0f0f0' }}>
                   {product.imageUrl ? (
-                    <img src={product.imageUrl} alt={product.name} style={{ width: '100%', height: '120px', objectFit: 'contain' }} />
+                    <img src={product.imageUrl} alt={product.name} className="product-image" />
                   ) : (
                     <span className="product-icon" role="img" aria-label={product.name}>
-                      {product.iconPlaceholder}
+                      {product.iconPlaceholder || '🛍️'}
                     </span>
                   )}
                 </div>
@@ -175,7 +281,8 @@ const ProductsPage: React.FC = () => {
         </div>
       )}
 
-      {totalPages > 0 && (
+      {/* Mostrar paginação apenas se houver mais de uma página de resultados */}
+      {totalPages > 1 && (
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
