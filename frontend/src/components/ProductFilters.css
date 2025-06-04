@@ -1,0 +1,106 @@
+/* src/components/ProductFilters.css */
+.product-filters-bar {
+    display: flex;
+    flex-wrap: wrap; /* Permite quebra de linha */
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 25px;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+    gap: 20px; /* Espaçamento entre os blocos de filtro e ordenação */
+  }
+  
+  .filters-section,
+  .sort-section {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaçamento entre label e select, e entre selects */
+    flex-wrap: nowrap; /* Evita que label e select quebrem linha entre si */
+  }
+  
+  .filters-section label,
+  .sort-section label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Evita quebra de linha no label */
+  }
+  
+  .filters-section select,
+  .sort-section select {
+    padding: 8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 0.85rem;
+    min-width: 120px; /* Largura mínima para os selects */
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .filters-section select:focus,
+  .sort-section select:focus {
+    outline: none;
+    border-color: #fd7e14;
+    box-shadow: 0 0 0 0.2rem rgba(253, 126, 20, 0.25);
+  }
+  
+  .sort-section {
+    margin-left: auto; /* Empurra a ordenação para a direita se houver espaço */
+  }
+  
+  
+  /* Responsividade para a barra de filtros */
+  @media (max-width: 991px) { /* Tablets e abaixo */
+    .product-filters-bar {
+      justify-content: flex-start; /* Alinha à esquerda */
+    }
+    .sort-section {
+      margin-left: 0;
+      width: 100%; /* Ocupa a largura toda em uma nova linha se necessário */
+      justify-content: flex-end; /* Alinha o select de ordenação à direita da sua linha */
+    }
+     .filters-section {
+      width: 100%; /* Ocupa a largura toda */
+      justify-content: space-around; /* Distribui os filtros */
+      margin-bottom: 15px; /* Espaço se a ordenação for para baixo */
+    }
+    .filters-section select {
+      flex-grow: 1;
+      min-width: 100px;
+    }
+  }
+  
+  
+  @media (max-width: 767px) { /* Mobiles */
+    .product-filters-bar {
+      flex-direction: column; /* Empilha os filtros e ordenação */
+      align-items: stretch; /* Faz os itens ocuparem a largura total */
+      gap: 15px;
+    }
+  
+    .filters-section {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+  
+    .filters-section label,
+    .sort-section label {
+      margin-bottom: 3px; /* Pequena margem abaixo do label quando empilhado */
+      text-align: left;
+    }
+  
+    .filters-section select,
+    .sort-section select {
+      width: 100%; /* Ocupa toda a largura */
+      min-width: 0; /* Reseta a largura mínima */
+    }
+    .sort-section {
+      justify-content: flex-start; /* Alinha o label e select à esquerda */
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }

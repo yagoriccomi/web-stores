@@ -1,5 +1,5 @@
 // src/App.tsx
-import React from 'react';
+import React, { JSX } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';

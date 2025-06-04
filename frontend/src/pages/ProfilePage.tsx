@@ -36,13 +36,12 @@ const ProfilePage: React.FC = () => {
     const { userToken } = useAuth(); // Exemplo de como pegar o token, dados do usuário viriam de uma API
 
     // Estado para o formulário de dados pessoais
-    const { register: registerPersonal, handleSubmit: handleSubmitPersonal, setValue: setValuePersonal, formState: { errors: errorsPersonal, isSubmitting: isSubmittingPersonal } } = useForm<PersonalDataInputs>({
-        // Simular carregamento de dados
+    const { register: registerPersonal, handleSubmit: handleSubmitPersonal, setValue: setValuePersonal, control: controlPersonal, formState: { errors: errorsPersonal, isSubmitting: isSubmittingPersonal } } = useForm<PersonalDataInputs>({ // <-- ADDED controlPersonal
         defaultValues: {
             nome: "Usuário",
             sobrenome: "Exemplo",
             celular: "(00) 00000-0000",
-            cpf: "000.000.000-00" // CPF não deve ser editável na prática
+            cpf: "000.000.000-00"
         }
     });
 
@@ -149,8 +148,7 @@ const ProfilePage: React.FC = () => {
                         <label htmlFor="profile-celular">Celular:</label>
                         <Controller
                             name="celular"
-                            control={registerPersonal.control} // Corrigido aqui, deve ser o control de useForm, mas registerPersonal não o tem. Precisa de um control específico para este form
-                            // Temporariamente usando registerPersonal diretamente, mas o ideal é ter um 'controlPersonal'
+                            control={controlPersonal} // <--- CORRECTED to use controlPersonal
                             render={({ field }) => (
                                 <input
                                     id="profile-celular"

@@ -1,5 +1,5 @@
 // src/contexts/CartContext.tsx
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, type  ReactNode, useEffect } from 'react';
 
 // Definindo uma interface para o produto (pode ser mais detalhada)
 export interface Product {

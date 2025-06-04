@@ -1,11 +1,11 @@
 // src/contexts/AuthContext.tsx
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, type ReactNode, useEffect } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
   userToken: string | null;
   login: (token: string) => void;
-  logout: () => void;
+  logout: (callback?: () => void) => void; // <--- MODIFIED: Added optional callback
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,12 +28,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
+  const logout = (callback?: () => void) => { // <--- MODIFIED: Added optional callback
     localStorage.removeItem('authToken');
     setUserToken(null);
     setIsAuthenticated(false);
-    // Idealmente, redirecionar para a página de login
-    window.location.href = '/login';
+    if (callback) {
+      callback(); // Execute the callback if provided
+    } else {
+      window.location.href = '/login'; // Default redirect if no callback
+    }
   };
 
   return (

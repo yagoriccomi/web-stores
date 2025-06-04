@@ -1,0 +1,34 @@
+// tsconfig.app.json
+{
+  "compilerOptions": {
+    // Esta opção indica que este tsconfig faz parte de um projeto maior (referenciado pelo tsconfig.json raiz)
+    "composite": true,
+    // Local para armazenar informações de build incremental, ajuda a acelerar builds subsequentes
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    "target": "ESNext", // Ou "ES2020", "ES2021", etc. "ESNext" é geralmente bom para projetos modernos
+    "useDefineForClassFields": true, // Padrão para classes ES
+    "lib": ["ESNext", "DOM", "DOM.Iterable"], // <-- MUITO IMPORTANTE: Incluir "DOM" e "DOM.Iterable"
+    "module": "ESNext", // Padrão para bundlers modernos como Vite
+    "skipLibCheck": true, // Evita a checagem de tipos em arquivos .d.ts de bibliotecas
+
+    /* Bundler mode */
+    "moduleResolution": "bundler", // Recomendado para Vite e bundlers modernos
+    "allowImportingTsExtensions": true, // Permite importar arquivos .ts e .tsx com suas extensões
+    "resolveJsonModule": true, // Permite importar arquivos .json
+    "isolatedModules": true, // Garante que cada arquivo possa ser transpilado separadamente (bom para bundlers)
+    "moduleDetection": "force", // Garante que arquivos sejam tratados como módulos
+    "noEmit": true, // O Vite (ou outro bundler) cuida da emissão de arquivos JS, o tsc só faz a checagem de tipos
+
+    "jsx": "react-jsx", // <-- OPÇÃO MAIS CRUCIAL PARA ESTE ERRO
+
+    /* Linting */
+    "strict": true, // Habilita todas as checagens de tipo estritas
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true // Permite interoperabilidade com módulos CommonJS
+  },
+  "include": ["src"] // <-- IMPORTANTE: Certifique-se de que "src" está aqui
+}
