@@ -1,10 +1,9 @@
 // src/pages/AdminProductRegistrationPage.tsx
 import React, { useState } from 'react';
-import axios from 'axios'; // Para fazer a requisição HTTP
-// import { useAuth } from '../contexts/AuthContext'; // Para proteger a rota no futuro
+import axios from 'axios';
 
 const AdminProductRegistrationPage: React.FC = () => {
-  // const { userToken } = useAuth(); // Descomente para usar autenticação
+  // ... (your existing state variables)
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
@@ -14,6 +13,7 @@ const AdminProductRegistrationPage: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -28,6 +28,7 @@ const AdminProductRegistrationPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const formElement = event.currentTarget; // <--- CRITICAL: Capture the form reference
     setMessage(null);
     setIsLoading(true);
 
@@ -45,23 +46,14 @@ const AdminProductRegistrationPage: React.FC = () => {
     const formData = new FormData();
     formData.append('name', productName);
     formData.append('description', description);
-    formData.append('price', price.replace(',', '.')); // Enviar como número ou string que o backend parseará
+    formData.append('price', price.replace(',', '.'));
     formData.append('category', category);
     formData.append('stock', stock);
     formData.append('image', imageFile);
-    // formData.append('iconPlaceholder', '✨'); // Opcional, se quiser enviar um
 
     try {
-      // Adicionar token de autenticação se necessário
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //     // Authorization: `Bearer ${userToken}`,
-      //   },
-      // };
-      // Ajuste a URL da API conforme necessário (ex: http://localhost:5001/api/products)
       const response = await axios.post('http://localhost:5001/api/products', formData, {
-         headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       setMessage({ type: 'success', text: `Produto "${response.data.name}" cadastrado com sucesso!` });
@@ -73,7 +65,7 @@ const AdminProductRegistrationPage: React.FC = () => {
       setStock('0');
       setImageFile(null);
       setImagePreview(null);
-      event.currentTarget.reset(); // Reseta o input file
+      formElement.reset(); // <--- CRITICAL: Use the captured reference
 
     } catch (err: any) {
       console.error("Erro ao cadastrar produto:", err);
@@ -85,7 +77,8 @@ const AdminProductRegistrationPage: React.FC = () => {
   };
 
   return (
-    <div className="login-page-container"> {/* Reutilizando classes de SignUpPage/ProfilePage para consistência */}
+    // ... seu JSX ...
+    <div className="login-page-container">
       <div className="login-box" style={{ maxWidth: '700px' }}>
         <h2>Cadastrar Novo Produto</h2>
         {message && (
@@ -93,7 +86,8 @@ const AdminProductRegistrationPage: React.FC = () => {
             {message.text}
           </p>
         )}
-        <form onSubmit={handleSubmit} className="login-form section-form"> {/* Reutilizando classes */}
+        <form onSubmit={handleSubmit} className="login-form section-form">
+          {/* Inputs do formulário aqui */}
           <div className="form-group">
             <label htmlFor="productName">Nome do Produto:</label>
             <input
@@ -122,11 +116,11 @@ const AdminProductRegistrationPage: React.FC = () => {
               <label htmlFor="price">Preço (ex: 199,90):</label>
               <input
                 id="price"
-                type="text" // Ou "number" com step="0.01"
+                type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 required
-                pattern="^\d+([,.]\d{1,2})?$" // Simples validação de formato
+                pattern="^\d+([,.]\d{1,2})?$"
                 title="Use vírgula ou ponto como separador decimal. Ex: 29,90 ou 29.90"
               />
             </div>
@@ -140,7 +134,7 @@ const AdminProductRegistrationPage: React.FC = () => {
               />
             </div>
           </div>
-           <div className="form-group">
+          <div className="form-group">
               <label htmlFor="stock">Estoque:</label>
               <input
                 id="stock"

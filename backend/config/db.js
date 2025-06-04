@@ -1,15 +1,15 @@
 // backend/config/db.js
 import mongoose from 'mongoose';
-// import dotenv from 'dotenv'; // Removido
-// dotenv.config({ path: '../.env' }); // Removido
+// import dotenv from 'dotenv'; // <--- REMOVA ou comente esta linha
+// dotenv.config({ path: '../.env' }); // <--- REMOVA ou comente esta linha
 
 const connectDB = async () => {
   try {
-    // process.env.MONGO_URI já estará disponível
+    // Adicione logs aqui também para depuração, se necessário
+    // console.log('MONGO_URI (em db.js):', process.env.MONGO_URI);
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      // useNewUrlParser e useUnifiedTopology são obsoletos e podem ser removidos
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
     console.log(`MongoDB Conectado: ${conn.connection.host}`);
   } catch (error) {
