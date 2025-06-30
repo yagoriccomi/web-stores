@@ -34,7 +34,7 @@ const Footer: React.FC = () => {
             <h4>MINHA CONTA</h4>
             <ul>
               {/* Agora usando a variável 'auth' que foi inicializada acima */}
-              <li><Link to={auth.isAuthenticated ? "/profile" : "/login"}>Meu Perfil</Link></li>
+              <li><Link to={auth?.isAuthenticated ? "/profile" : "/login"}>Meu Perfil</Link></li>
               <li><Link to="/orders">Meus Pedidos</Link></li> {/* Esta rota não foi definida, precisará ser criada se usada */}
               <li><Link to="/settings">Configurações</Link></li> {/* Esta rota não foi definida */}
             </ul>

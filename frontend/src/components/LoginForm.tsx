@@ -1,7 +1,7 @@
 // src/components/LoginForm.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
 import axios from 'axios';
 import { auth } from '../config/firebaseClientConfig'; // Configuração do cliente Firebase
 import { useAuth as useAppAuth } from '../contexts/AuthContext'; // Hook de autenticação do app
