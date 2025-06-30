@@ -11,8 +11,8 @@ import ProductFilters, { type ActiveFilters } from '../components/ProductFilters
 // --- CONFIGURAÇÕES E TIPAGEM ---
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
-const DESKTOP_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
-const MOBILE_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
+const DESKTOP_BANNER_URL = "/Gemini_Generated_Image_xw25nixw25nixw25.png";
+const MOBILE_BANNER_URL = "/Gemini_Generated_Image_xw25nixw25nixw25.png";
 
 // Interface para o produto como vem da API (preço como número)
 interface ApiProduct extends Omit<Product, 'price'> {

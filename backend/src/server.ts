@@ -1,4 +1,6 @@
 // Não é mais necessário importar ou configurar o dotenv aqui
+import dotenv from 'dotenv';
+dotenv.config();
 
 import app from './app.js';
 import connectDB from './config/db.js';
