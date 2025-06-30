@@ -3,14 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import app from './app.js';
-import connectDB from './config/db.js';
 
 const startServer = async () => {
     try {
         console.log('Iniciando o servidor...');
-
-        // Conectar ao MongoDB
-        await connectDB();
 
         // Inicializar o Firebase Admin
         console.log('Inicializando o Firebase Admin SDK...');
