@@ -11,6 +11,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import './index.css';
 import { SearchProvider } from './contexts/SearchContext';
+import AdminProductRegistrationPage from './pages/AdminProductRegistrationPage'; // <<<--- ADICIONE ESTA LINHA
+
 // import './pages/ProductsPage.css'; // O CSS específico da página já está importado em ProductsPage.tsx
 
 // ... (DashboardPage e ProtectedRoute como definidos anteriormente) ...
@@ -32,10 +34,10 @@ const DashboardPage: React.FC = () => {
 };
 
 const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  //const { isAuthenticated } = useAuth();
+  //if (!isAuthenticated) {
+  //  return <Navigate to="/login" replace />;
+  //}
   return children;
 };
 
@@ -64,6 +66,14 @@ function App() {
                     path="/cart"
                     element={
                       <div style={{ padding: '20px', textAlign: 'center', minHeight: 'calc(100vh - 200px)' }}>Página do Carrinho (Em construção)</div>
+                    }
+                  />
+                  <Route
+                    path="/admin/add-product"
+                    element={
+                      <ProtectedRoute>
+                        <AdminProductRegistrationPage />
+                      </ProtectedRoute>
                     }
                   />
                   <Route path="/about" element={<div style={{ padding: '20px', textAlign: 'center' }}>Página Sobre Nós (Placeholder)</div>} />
