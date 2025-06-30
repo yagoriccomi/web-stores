@@ -1,13 +1,15 @@
 // src/components/SignUpForm.tsx
-import React, { useState } from 'react'; // Removido useEffect
+import React, { useState } from 'react';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Adicione este import no topo do arquivo
-import axios from 'axios'; // Adicione ou descomente este import
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'; // Garanta que a URL base da API esteja definida
-// Funções de máscara (CPF e Celular mantidas)
+// URL base da sua API (idealmente vinda de variáveis de ambiente)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001';
+
+// --- Funções de Máscara ---
 const maskCPF = (value: string) => {
     return value
         .replace(/\D/g, '')
@@ -24,43 +26,58 @@ const maskCelular = (value: string) => {
         .replace(/(-\d{4})\d+?$/, '$1');
 };
 
-// Novo FormInputs sem endereço, com email
+// --- Tipagem dos Dados do Formulário ---
 type FormInputs = {
     nome: string;
     sobrenome: string;
-    email: string; // Adicionado Email
+    email: string;
     cpf: string;
     celular: string;
     senha: string;
     confirmarSenha: string;
 };
 
+// --- Componente do Formulário ---
 const SignUpForm: React.FC = () => {
-    const { register, handleSubmit, control, watch, formState: { errors, isSubmitting } } = useForm<FormInputs>({
-        mode: 'onBlur'
+    const { 
+        register, 
+        handleSubmit, 
+        control, 
+        watch, 
+        formState: { errors, isSubmitting } 
+    } = useForm<FormInputs>({
+        mode: 'onBlur' // Valida os campos quando o usuário tira o foco deles
     });
-     const navigate = useNavigate(); // Adicione esta linha
+    
+    const navigate = useNavigate();
     const [apiError, setApiError] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
+    // Observa o valor do campo de senha para validar a confirmação
     const senhaValue = watch('senha');
 
-    // Lógica de busca de CEP foi removida
-
-     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    /**
+     * Função executada no envio do formulário.
+     */
+    const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         setApiError('');
         try {
-          // A senha é enviada, o backend cuidará dela
-          const { confirmarSenha, ...payload } = data; // Remove a confirmação de senha do payload
+          // Remove a confirmação de senha, pois não é necessária no backend
+          const { confirmarSenha, ...payload } = data;
+          
+          // Envia os dados para a API
           await axios.post(`${API_BASE_URL}/api/auth/email-password-signup`, payload);
+          
           alert('Cadastro realizado com sucesso! Agora você pode fazer o login.');
           navigate('/login'); // Redireciona para a página de login
+
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {
+            // Exibe o erro retornado pela API
             setApiError(error.response.data.message || 'Erro ao cadastrar.');
           } else {
-            setApiError('Ocorreu um erro. Tente novamente.');
+            setApiError('Ocorreu um erro inesperado. Tente novamente.');
           }
         }
     };
@@ -69,6 +86,7 @@ const SignUpForm: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="login-form">
             {apiError && <p className="error-message">{apiError}</p>}
 
+            {/* Nome e Sobrenome */}
             <div className="form-row">
                 <div className="form-group">
                     <label htmlFor="nome">Nome:</label>
@@ -82,7 +100,8 @@ const SignUpForm: React.FC = () => {
                 </div>
             </div>
 
-            <div className="form-group"> {/* Email agora ocupa uma linha inteira, ou pode ser colocado num form-row */}
+            {/* Email */}
+            <div className="form-group">
                 <label htmlFor="email-signup">Email:</label>
                 <input
                     id="email-signup"
@@ -99,6 +118,7 @@ const SignUpForm: React.FC = () => {
                 {errors.email && <p className="input-error-message">{errors.email.message}</p>}
             </div>
 
+            {/* CPF e Celular */}
             <div className="form-row">
                 <div className="form-group">
                     <label htmlFor="cpf">CPF:</label>
@@ -108,10 +128,6 @@ const SignUpForm: React.FC = () => {
                         rules={{
                             required: 'CPF é obrigatório',
                             validate: (value) => cpfValidator.isValid(value) || 'CPF inválido.',
-                            pattern: {
-                                value: /^\d{3}\.\d{3}\.\d{3}-\d{2}$/,
-                                message: 'Formato esperado: XXX.XXX.XXX-XX'
-                            }
                         }}
                         render={({ field }) => (
                             <input
@@ -153,6 +169,7 @@ const SignUpForm: React.FC = () => {
                 </div>
             </div>
 
+            {/* Senha e Confirmar Senha */}
             <div className="form-row">
                 <div className="form-group">
                     <label htmlFor="senha-signup">Senha:</label>
@@ -167,12 +184,7 @@ const SignUpForm: React.FC = () => {
                             })}
                             autoComplete="new-password"
                         />
-                        <button
-                            type="button"
-                            className="password-toggle-button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
-                        >
+                        <button type="button" className="password-toggle-button" onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
@@ -190,20 +202,13 @@ const SignUpForm: React.FC = () => {
                             })}
                             autoComplete="new-password"
                         />
-                        <button
-                            type="button"
-                            className="password-toggle-button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            aria-label={showConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
-                        >
+                        <button type="button" className="password-toggle-button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
                     {errors.confirmarSenha && <p className="input-error-message">{errors.confirmarSenha.message}</p>}
                 </div>
             </div>
-
-            {/* Campos de endereço removidos daqui */}
 
             <button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Cadastrando...' : 'Criar Conta'}

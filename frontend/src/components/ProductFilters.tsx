@@ -2,12 +2,14 @@
 import React from 'react';
 import './ProductFilters.css';
 
-export interface ActiveFilters { // <--- MAKE SURE 'export' IS HERE
+// Exporta a interface para que possa ser usada em outros arquivos, como na página que gerencia o estado dos filtros.
+export interface ActiveFilters {
   price: string;
   size: string;
   color: string;
 }
 
+// Define as propriedades que o componente espera receber.
 interface ProductFiltersProps {
   onFilterChange: (filterType: keyof ActiveFilters, value: string) => void;
   onSortChange: (sortValue: string) => void;
@@ -21,15 +23,23 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   activeFilters,
   currentSort,
 }) => {
-  // ... rest of the component code
+  // Log para depuração: ajuda a verificar se os filtros corretos estão sendo recebidos pelo componente.
+  console.log('ProductFilters - Received activeFilters:', activeFilters);
+
+  // Verificação de segurança: se activeFilters for nulo ou indefinido, exibe uma mensagem de erro em vez de quebrar a aplicação.
+  if (!activeFilters) {
+    console.error('CRÍTICO: activeFilters está indefinido no componente ProductFilters!');
+    return <div>Erro ao carregar filtros...</div>;
+  }
+
   return (
     <div className="product-filters-bar">
-      {/* Filters */}
+      {/* Seção de Filtros */}
       <div className="filters-section">
         <label htmlFor="filter-price">Preço:</label>
         <select
           id="filter-price"
-          value={activeFilters.price}
+          value={activeFilters.price} // O valor é controlado pelo estado do componente pai
           onChange={(e) => onFilterChange('price', e.target.value)}
         >
           <option value="all">Todos os Preços</option>
@@ -66,7 +76,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         </select>
       </div>
 
-      {/* Sort */}
+      {/* Seção de Ordenação */}
       <div className="sort-section">
         <label htmlFor="sort-order">Ordenar por:</label>
         <select
