@@ -119,7 +119,7 @@ const ProductsPage: React.FC = () => {
         // Seu backend está em '/api/products'
         // O frontend está em localhost:5173, backend em localhost:5001
         // Certifique-se que o CORS no backend permite requisições de localhost:5173
-        const response = await axios.get<APIProduct[]>('http://localhost:5001/api/products');
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/products`);
         setAllProducts(response.data);
       } catch (err) {
         console.error("Erro ao buscar produtos:", err);
