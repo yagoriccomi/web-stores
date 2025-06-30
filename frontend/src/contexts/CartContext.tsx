@@ -5,12 +5,9 @@ import React, { createContext, useState, useContext, type  ReactNode, useEffect 
 export interface Product {
   id: string;
   name: string;
-  price: string; // Mantém como string, pois o backend formatará
-  iconPlaceholder: string; // Pode ser usado como fallback
+  price: string; // Manter como string por enquanto, mas considere number para cálculos
+  iconPlaceholder: string;
   description: string;
-  imageUrl: string; // Novo campo
-  category?: string; // Opcional
-  stock?: number; // Opcional
   // Adicione outras propriedades do produto conforme necessário (ex: image, stock)
 }
 

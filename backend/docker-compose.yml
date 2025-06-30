@@ -8,7 +8,7 @@ services:
     volumes:
       - mongo-data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin # Opcional: defina um usuário root
-      MONGO_INITDB_ROOT_PASSWORD: password # Opcional: defina uma senha root
+      MONGO_INITDB_ROOT_USERNAME: Soleo # Opcional: defina um usuário root
+      MONGO_INITDB_ROOT_PASSWORD: 1223334444 # Opcional: defina uma senha root
 volumes:
   mongo-data:

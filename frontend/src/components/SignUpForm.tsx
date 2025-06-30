@@ -1,11 +1,12 @@
 // src/components/SignUpForm.tsx
 import React, { useState } from 'react'; // Removido useEffect
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
-// axios não é mais necessário aqui se a busca de CEP foi removida
-// import axios from 'axios';
 import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // Adicione este import no topo do arquivo
+import axios from 'axios'; // Adicione ou descomente este import
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001'; // Garanta que a URL base da API esteja definida
 // Funções de máscara (CPF e Celular mantidas)
 const maskCPF = (value: string) => {
     return value
@@ -38,6 +39,7 @@ const SignUpForm: React.FC = () => {
     const { register, handleSubmit, control, watch, formState: { errors, isSubmitting } } = useForm<FormInputs>({
         mode: 'onBlur'
     });
+     const navigate = useNavigate(); // Adicione esta linha
     const [apiError, setApiError] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
@@ -46,23 +48,21 @@ const SignUpForm: React.FC = () => {
 
     // Lógica de busca de CEP foi removida
 
-    const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         setApiError('');
-        console.log('Dados do formulário de cadastro (sem endereço):', data);
-        // Aqui você faria a chamada para sua API de backend para cadastrar o usuário
-        // Exemplo:
-        // try {
-        //   await axios.post('/api/auth/signup', data);
-        //   alert('Cadastro realizado com sucesso! Complete seu perfil adicionando um endereço.');
-        //   // Redirecionar para login ou para a nova página de perfil/endereço
-        // } catch (error) {
-        //   if (axios.isAxiosError(error) && error.response) {
-        //     setApiError(error.response.data.message || 'Erro ao cadastrar.');
-        //   } else {
-        //     setApiError('Ocorreu um erro. Tente novamente.');
-        //   }
-        // }
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulação
+        try {
+          // A senha é enviada, o backend cuidará dela
+          const { confirmarSenha, ...payload } = data; // Remove a confirmação de senha do payload
+          await axios.post(`${API_BASE_URL}/api/auth/email-password-signup`, payload);
+          alert('Cadastro realizado com sucesso! Agora você pode fazer o login.');
+          navigate('/login'); // Redireciona para a página de login
+        } catch (error) {
+          if (axios.isAxiosError(error) && error.response) {
+            setApiError(error.response.data.message || 'Erro ao cadastrar.');
+          } else {
+            setApiError('Ocorreu um erro. Tente novamente.');
+          }
+        }
     };
 
     return (
