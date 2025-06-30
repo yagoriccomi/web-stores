@@ -14,9 +14,11 @@ const DESKTOP_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png"
 const MOBILE_BANNER_URL = "/public/Gemini_Generated_Image_xw25nixw25nixw25.png";
 
 // Interface para o produto como vem da API (antes da formatação de preço)
+
+// A interface base `Product` já tem quase tudo que precisamos
+// Apenas definimos aqui o que vem da API, que tem o preço como número
 interface ApiProduct extends Omit<Product, 'price'> {
   price: number;
-  category: string;
 }
 
 const ProductsPage: React.FC = () => {

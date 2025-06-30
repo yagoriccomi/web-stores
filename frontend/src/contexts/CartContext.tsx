@@ -5,10 +5,11 @@ import React, { createContext, useState, useContext, type  ReactNode, useEffect 
 export interface Product {
   id: string;
   name: string;
-  price: string; // Manter como string por enquanto, mas considere number para cálculos
-  iconPlaceholder: string;
+  price: string;
   description: string;
-  // Adicione outras propriedades do produto conforme necessário (ex: image, stock)
+  imageUrl: string;      // <-- CAMPO CORRETO ADICIONADO
+  category: string;      // <-- Campo útil para o carrinho
+  stock: number;         // <-- Campo útil para o carrinho
 }
 
 // Interface para o item do carrinho, que inclui o produto e a quantidade
