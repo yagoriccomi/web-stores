@@ -5,7 +5,7 @@ import React, { createContext, useState, useContext, type  ReactNode, useEffect 
 export interface Product {
   id: string;
   name: string;
-  price: number;
+  price: string;
   description: string;
   imageUrl: string;      // <-- CAMPO CORRETO ADICIONADO
   category: string;      // <-- Campo útil para o carrinho

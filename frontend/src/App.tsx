@@ -1,6 +1,6 @@
 // frontend/src/App.tsx
 
-import React from 'react';
+// import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 // 1. Importe seus provedores de contexto REAIS
@@ -16,7 +16,7 @@ import Footer from './components/Footer';
 import ProductsPage from './pages/ProductsPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
-import ProfilePage from './pages/ProfilePage';
+//import ProfilePage from './pages/ProfilePage';
 import AddProductPage from './pages/admin/AddProductPage'; // Usando a página de admin correta
 // import DashboardPage from './pages/DashboardPage'; // Supondo que você tenha ou queira criar esta página
 
