@@ -120,27 +120,6 @@
     grid-column: 1 / -1; /* Para ocupar todas as colunas do grid se estiver dentro dele */
   }
   
-.product-item .product-image-container {
-  width: 120px;  /* Mantenha o tamanho consistente com o product-icon-container */
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  overflow: hidden;
-  border-radius: 8px; /* Ou 50% se quiser circular para todos */
-}
-
-.product-item .product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Para cobrir a área sem distorcer */
-}
-
-.product-item .product-icon-container .product-icon {
-  font-size: 4.5rem;
-  line-height: 1;
-}
   
   /* Desktop: 4 colunas */
   @media (min-width: 992px) { 
@@ -242,3 +221,27 @@
       margin-bottom: 10px;
     }
   }
+
+  /* Adicione estas classes ao final do arquivo web-stores/frontend/src/pages/ProductsPage.css */
+
+.product-section {
+  margin-bottom: 50px; /* Espaço maior entre as seções de categoria */
+}
+
+.product-section-title {
+  font-size: 2.2rem;
+  color: #343a40;
+  text-align: left;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #fd7e14; /* Borda laranja para destacar o título da seção */
+  font-weight: 600;
+}
+
+/* Ajuste de responsividade para os títulos */
+@media (max-width: 767px) {
+  .product-section-title {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+}

@@ -1,21 +1,24 @@
-// src/components/Header.tsx
+// web-stores/frontend/src/components/Header.tsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
-import { useSearch } from '../contexts/SearchContext'; // Importar useSearch
-import { FaShoppingCart, FaSearch } from 'react-icons/fa';
+import { useSearch } from '../contexts/SearchContext';
+import { FaShoppingCart, FaSearch, FaUserShield } from 'react-icons/fa';
 
 const Header: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const { getCartItemCount } = useCart();
-  const { searchTerm, setSearchTerm } = useSearch(); // Usar o hook de pesquisa
+  const { searchTerm, setSearchTerm } = useSearch();
   const navigate = useNavigate();
   const itemCount = getCartItemCount();
 
   const handleLogout = () => {
     logout(() => navigate('/login'));
   };
+
+  // Esta é a linha corrigida para ser segura contra valores nulos
+  const isAdmin = user?.roles?.includes('admin');
 
   return (
     <header className="app-header">
@@ -24,7 +27,6 @@ const Header: React.FC = () => {
           <Link to="/">NOSSA TENDA</Link>
         </div>
 
-        {/* Barra de Pesquisa Centralizada */}
         <div className="search-bar-wrapper">
           <FaSearch className="search-icon" />
           <input
@@ -46,7 +48,12 @@ const Header: React.FC = () => {
           <div className="user-actions">
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                {isAdmin && (
+                  <Link to="/admin/add-product" className="nav-link" title="Painel do Administrador">
+                     <FaUserShield style={{ marginRight: '5px' }}/> Admin
+                  </Link>
+                )}
+                <Link to="/profile" className="nav-link">Meu Perfil</Link>
                 <button onClick={handleLogout} className="nav-button logout-button">
                   Sair
                 </button>

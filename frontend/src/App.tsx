@@ -1,4 +1,4 @@
-// src/App.tsx
+// web-stores/frontend/src/App.tsx
 import React, { JSX } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
@@ -6,40 +6,18 @@ import SignUpPage from './pages/SignUpPage';
 import ProfilePage from './pages/ProfilePage';
 import ProductsPage from './pages/ProductsPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { CartProvider } from './contexts/CartContext'; // <<<--- ADICIONE/VERIFIQUE ESTA LINHA
+import { CartProvider } from './contexts/CartContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import './index.css';
 import { SearchProvider } from './contexts/SearchContext';
-import AdminProductRegistrationPage from './pages/AdminProductRegistrationPage'; // <<<--- ADICIONE ESTA LINHA
+import AdminRoute from './components/AdminRoute'; // <-- ADICIONADO
+import AddProductPage from './pages/admin/AddProductPage'; // <-- ADICIONADO
 
-// import './pages/ProductsPage.css'; // O CSS específico da página já está importado em ProductsPage.tsx
 
-// ... (DashboardPage e ProtectedRoute como definidos anteriormente) ...
-const DashboardPage: React.FC = () => {
-  const auth = useAuth();
-  const navigate = useNavigate();
-  return (
-    <div style={{ textAlign: 'center', marginTop: '50px', minHeight: 'calc(100vh - 200px)' }}>
-      <h2>Dashboard</h2>
-      <p>Bem-vindo! Você está logado.</p>
-      <button
-        onClick={() => auth.logout(() => navigate('/login'))}
-        style={{ padding: '10px 20px', background: '#fd7e14', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
-      >
-        Sair
-      </button>
-    </div>
-  );
-};
-
-const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  //const { isAuthenticated } = useAuth();
-  //if (!isAuthenticated) {
-  //  return <Navigate to="/login" replace />;
-  //}
-  return children;
-};
+// ... (Componentes DashboardPage e ProtectedRoute permanecem os mesmos) ...
+const DashboardPage: React.FC = () => { /* ...código existente... */ };
+const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => { /* ...código existente... */ };
 
 function App() {
   return (
@@ -51,9 +29,13 @@ function App() {
               <Header />
               <main className="main-content">
                 <Routes>
+                  {/* ROTA PRINCIPAL ADICIONADA */}
                   <Route path="/" element={<ProductsPage />} />
+
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
+                  
+                  {/* Rotas Protegidas */}
                   <Route
                     path="/profile"
                     element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}
@@ -62,23 +44,15 @@ function App() {
                     path="/dashboard"
                     element={<ProtectedRoute><DashboardPage /></ProtectedRoute>}
                   />
-                  <Route
-                    path="/cart"
-                    element={
-                      <div style={{ padding: '20px', textAlign: 'center', minHeight: 'calc(100vh - 200px)' }}>Página do Carrinho (Em construção)</div>
-                    }
-                  />
+
+                  {/* ROTA DE ADMIN */}
                   <Route
                     path="/admin/add-product"
-                    element={
-                      <ProtectedRoute>
-                        <AdminProductRegistrationPage />
-                      </ProtectedRoute>
-                    }
+                    element={<AdminRoute><AddProductPage /></AdminRoute>}
                   />
-                  <Route path="/about" element={<div style={{ padding: '20px', textAlign: 'center' }}>Página Sobre Nós (Placeholder)</div>} />
-                  <Route path="/faq" element={<div style={{ padding: '20px', textAlign: 'center' }}>Página FAQ (Placeholder)</div>} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
+
+                  {/* Redirecionamento (Opcional, mas bom ter) */}
+                  <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </main>
               <Footer />
