@@ -7,19 +7,6 @@ SET FRONTEND_DIR=.\frontend
 
 ECHO Iniciando Contêiner do MongoDB via Docker Compose...
 cd %BACKEND_DIR%
-REM Inicia os servicos definidos no docker-compose.yml do backend em modo detached (-d)
-REM Isso deve iniciar seu container MongoDB.
-docker-compose up -d
-IF ERRORLEVEL 1 (
-    ECHO ERRO: Falha ao iniciar o docker-compose. Verifique se o Docker está em execução.
-    pause
-    goto :eof
-)
-cd ..\
-
-REM Aguarde um tempo maior para o MongoDB no Docker iniciar e aceitar conexões
-ECHO Aguardando MongoDB no Docker iniciar...
-timeout /t 5 /nobreak > NUL
 
 ECHO Iniciando Servidor Backend...
 cd %BACKEND_DIR%
